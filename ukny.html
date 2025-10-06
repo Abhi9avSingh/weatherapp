@@ -1,0 +1,115 @@
+   <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WeatherAPI.com Forecast</title>
+  <style>
+    body {font-family: Arial, sans-serif;margin: 20px;background: #239ca6;}
+    h1 { color: #2c3e50; }
+    form {padding: 150px;text-align: center;}
+    input, button { padding: 8px; margin: 5px 0;align-items: center; }
+    #weather, #forecast {  margin-top: 20px; }
+    #forecast{text-align: center;}
+    .card {
+      background: #3a7d8e;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 10px 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .forecast-container {
+      background-color: aquamarine ;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .forecast-card {
+      background: #4f9fea;
+      padding: 10px;
+      border-radius: 6px;
+      flex: 1 1 150px;
+      text-align: center;
+    }
+    .error { color: red; }
+    .abc{
+      text-align: center;
+      background-color: aqua;
+    }
+    .abhi{
+      color: #4f9fea;
+      text-align: center;
+    }
+  </style>
+</head>
+<body> 
+  <h1 style="text-align: center;" style="font-size: larger;" >Weather Forecast  </h1>
+  
+  <form onsubmit="getWeather(event)">
+    <input type="text" id="city" placeholder="Enter city atmbfjg name" required />
+     
+    <button  id="abhi"  type="submit" >Get Weather</button>
+  </form>
+
+  <div id="weather"></div>
+  <div id="forecast"></div>
+  <p id="error" class="error"></p>
+
+  <script>
+    const API_KEY = "642c77ab2b6c49b59b8102428252609"; // 🔑 replace with your WeatherAPI.com key
+
+    function getWeather(event) {
+      event.preventDefault(); // stop form from refreshing
+      const city = document.getElementById("city").value;
+      const weatherDiv = document.getElementById("weather");
+      const forecastDiv = document.getElementById("forecast");
+      const errorDiv = document.getElementById("error");
+
+      weatherDiv.innerHTML = "Loading...";
+      forecastDiv.innerHTML = "";
+      errorDiv.textContent = "";
+
+      // 🔹 Call WeatherAPI.com
+      fetch(`https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${city}&days=3&aqi=no&alerts=no`)
+        .then(res => {
+          if (!res.ok) throw new Error("City not found or invalid API key");
+          return res.json();
+        })
+        .then(data => {
+          // Current weather
+          weatherDiv.innerHTML = `
+            <div class="card">
+              <h2>${data.location.name}, ${data.location.country}</h2>
+              <p><strong>Temperature:</strong> ${data.current.temp_c} °C</p>
+              <p><strong>Condition:</strong> ${data.current.condition.text}</p>
+              <img src="https:${data.current.condition.icon}" alt="Weather icon" />
+              <p><strong>Humidity:</strong> ${data.current.humidity}%</p>
+              <p><strong>Wind:</strong> ${data.current.wind_kph} kph</p>
+            </div>
+          `;
+
+          // Forecast
+          forecastDiv.innerHTML = "<h2>3-Day Forecast</h2><div class='forecast-container'></div>";
+          const container = forecastDiv.querySelector(".forecast-container");
+
+          data.forecast.forecastday.forEach(day => {
+            const card = document.createElement("div");
+            card.className = "forecast-card";
+            card.innerHTML = `
+              <h3>${day.date}</h3>
+              <img src="https:${day.day.condition.icon}" alt="Weather icon" />
+              <p><strong>${day.day.avgtemp_c} °C</strong></p>
+              <p>${day.day.condition.text}</p>
+              <p>💧 ${day.day.avghumidity}% | 🌬 ${day.day.maxwind_kph} kph</p>
+            `;
+            container.appendChild(card);
+          });
+        })
+        .catch(err => {
+          weatherDiv.innerHTML = "";
+          forecastDiv.innerHTML = "";
+          errorDiv.textContent = err.message;
+        });
+    }
+  </script>
+</body>
+</html>
