@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>WeatherAPI.com Forecast</title>
+  <style>
+   
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(45deg, #26288a, #00d0ff3c);
+  background-size: 200% 200%;
+  animation: pulseBackground 3s ease-in-out infinite alternate;
+}
+
+@keyframes pulseBackground {
+  0% { background-position: left bottom; }
+  100% { background-position: right  top; }
+}
+ 
+
+
+    h1 {
+      color: #001c3e;
+       /* padding: 140px; */
+      text-align: center;
+       margin-top: 30px;
+      padding: 30px 30px;
+      border: none;
+      border-radius: 10px;
+      font-size: 3rem;
+      color: rgba(239, 239, 241, 0.805);
+      /* background: linear-gradient(45deg, #00bfff, #0077ff); */
+      /* box-shadow: 0 0 20px #0077ff; */
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    form {
+      /* padding: -10px; */
+      text-align: center;
+    }
+
+    input,
+     button {
+      margin-top: 30px;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.2rem;
+      color: white;
+      background: linear-gradient(45deg, #00bfff, #0077ff);
+      box-shadow: 0 0 20px #0077ff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(45deg, #0099ff, #00ffff);
+      box-shadow: 0 0 30px #00ffff;
+      transform: scale(1.1);
+    }
+
+    #weather,
+    #forecast {
+      margin-top: 20px;
+    }
+
+    #forecast {
+      text-align: center;
+    }
+
+    .card {
+      background: #767fe2;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 10px 0;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .forecast-container {
+      background-color:  (#3d3b3b, #2fff003a);
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .forecast-card {
+      background: #767fe2;
+      padding: 10px;
+      border-radius: 6px;
+      flex: 1 1 150px;
+      text-align: center;
+    }
+
+    .error {
+      color: rgb(28, 2, 53);
+      font-size: 25px;
+    }
+
+    .abc {
+      text-align: center;
+      background-color: aqua;
+    }
+
+    .abhi {
+      color: #4f9fea;
+      text-align: center;
+    }
+    
+  </style>
+</head>
+
+<body>
+  <h1  class="underline-highlight" >Weather Forecast </h1>
+
+  <h1><form onsubmit="getWeather(event)">
+    <input class="hii" type="text" id="city" placeholder="Enter city name" required />
+    <button class="hii" id="abhi" type="submit">Get Weather</button>
+  </form>
+  </h1>
+
+  <div id="weather"></div>
+  <div id="forecast"></div>
+  <p id="error" class="error"></p>
+
+  <script>
+    const API_KEY = "642c77ab2b6c49b59b8102428252609";
+
+    function getWeather(event) {
+
+      event.preventDefault(); // Prevents page reload
+
+      const hh = document.getElementsByClassName("hii");
+
+      for (let i = 0; i < hh.length; i++) {
+        hh[i].style.display = "none";
+      }
+      const city = document.getElementById("city").value;
+      const weatherDiv = document.getElementById("weather");
+      const forecastDiv = document.getElementById("forecast");
+      const errorDiv = document.getElementById("error");
+
+      weatherDiv.innerHTML =  "loading........";
+      forecastDiv.innerHTML = "";
+      errorDiv.textContent = "";
+
+       fetch(`https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${city}&days=3&aqi=no&alerts=no`)
+        .then(res => {
+          if (!res.ok) {
+            // Redirect to 404.html
+            window.location.href = "404.html";
+            throw new Error("Redirecting to 404 page");
+          }
+          return res.json();
+        })
+        .then(data => {     
+
+          weatherDiv.innerHTML = `
+            <div class="card">
+              <h2>${data.location.name}, ${data.location.country}</h2>
+              <p><strong>Temperature:</strong> ${data.current.temp_c} °C</p>
+              <p><strong>Condition:</strong> ${data.current.condition.text}</p>
+              <img src="https:${data.current.condition.icon}" alt="Weather icon" />
+              <p><strong>Humidity:</strong> ${data.current.humidity}%</p>
+              <p><strong>Wind:</strong> ${data.current.wind_kph} kph</p>
+            </div>
+          `;
+
+
+          forecastDiv.innerHTML = "<h2 >3-Day Forecast</h2><div class='forecast-container'></div>";
+          const container = forecastDiv.querySelector(".forecast-container");
+
+          data.forecast.forecastday.forEach(day => {
+            const card = document.createElement("div");
+            card.className = "forecast-card";
+            card.innerHTML = `
+              <h3>${day.date}</h3>
+              <img src="https:${day.day.condition.icon}" alt="Weather icon" />
+              <p><strong>${day.day.avgtemp_c} °C</strong></p>
+              <p>${day.day.condition.text}</p>
+              <p>💧 ${day.day.avghumidity}% | 🌬 ${day.day.maxwind_kph} kph</p>
+            `;
+            container.appendChild(card);
+          });
+        })
+        .catch(err => {
+          weatherDiv.innerHTML = "";
+          forecastDiv.innerHTML = "";
+          errorDiv.textContent = err.message;
+        });
+    }
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 | Weather App</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at 20% 20%, #0a0a2a, #050515);
+      overflow: hidden;
+      color: white;
+      position: relative;
+    }
+
+    /* Weather background elements */
+    .cloud {
+      position: absolute;
+      top: 10%;
+      left: -200px;
+      background: rgba(255, 255, 255, 0.1);
+      width: 200px;
+      height: 60px;
+      border-radius: 50%;
+      filter: blur(10px);
+      animation: moveClouds 60s linear infinite;
+    }
+
+    @keyframes moveClouds {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(120vw); }
+    }
+
+    .rain {
+      position: absolute;
+      top: 0;
+      width: 2px;
+      height: 15px;
+      background: rgba(173, 216, 230, 0.5);
+      animation: rain 1s linear infinite;
+    }
+
+    @keyframes rain {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(100vh); opacity: 0; }
+    }
+
+    .thunder {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: white;
+      opacity: 0;
+      animation: thunder 6s infinite;
+    }
+
+    @keyframes thunder {
+      0%, 97%, 100% { opacity: 0; }
+      98% { opacity: 0.7; }
+      99% { opacity: 0.2; }
+    }
+
+   
+    h1 {
+      font-size: 12rem;
+      text-shadow: 0 0 30px #00bfff, 0 0 80px #0077ff;
+      animation: floatText 3s ease-in-out infinite;
+      user-select: none;
+    }
+
+    @keyframes floatText {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      margin-top: -30px;
+      color: #a5d8ff;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px #0077ff;
+    }
+
+  
+    button {
+      margin-top: 30px;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.2rem;
+      color: white;
+      background: linear-gradient(45deg, #00bfff, #0077ff);
+      box-shadow: 0 0 20px #0077ff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(45deg, #0099ff, #00ffff);
+      box-shadow: 0 0 30px #00ffff;
+      transform: scale(1.1);
+    }
+
+    .container {
+      text-align: center;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cloud"></div>
+  <div class="cloud" style="top: 30%; animation-delay: 10s; opacity: 0.6;"></div>
+  <div class="cloud" style="top: 50%; animation-delay: 25s; opacity: 0.3;"></div>
+
+  <div class="container">
+    <h1>404</h1>
+    <h2>Oops! The forecast for this page is missing ☁️</h2>
+    <button onclick="goHome()">Return Home</button>
+  </div>
+
+  <div class="thunder"></div>
+
+  <script>
+    
+    const createRain = () => {
+      for (let i = 0; i < 80; i++) {
+        const drop = document.createElement('div');
+        drop.classList.add('rain');
+        drop.style.left = Math.random() * 100 + 'vw';
+        drop.style.animationDuration = 0.5 + Math.random() + 's';
+        document.body.appendChild(drop);
+      }
+    };
+
+ 
+    const modes = ["rainy", "stormy", "clear"];
+    const mode = modes[Math.floor(Math.random() * modes.length)];
+
+    if (mode === "rainy") {
+      createRain();
+    } else if (mode === "stormy") {
+      createRain();
+      document.querySelector(".thunder").style.opacity = "0.1";  
+    } else {
+      document.body.style.background = "linear-gradient(135deg, #87CEEB, #1E90FF)";
+    }
+
+    function goHome() {
+      window.location.href = "another.html";  
+    }
+  </script>
+</body>
+</html>
