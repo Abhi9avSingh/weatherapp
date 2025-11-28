@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -7,11 +7,13 @@
   <style>
    
 body {
+  justify-content: center;
   margin: 0;
   height: 100vh;
   background: linear-gradient(45deg, #26288a, #00d0ff3c);
   background-size: 200% 200%;
   animation: pulseBackground 3s ease-in-out infinite alternate;
+  
 }
 
 @keyframes pulseBackground {
@@ -72,12 +74,28 @@ body {
     }
 
     .card {
-      background: #767fe2;
-      padding: 15px;
-      border-radius: 8px;
+      /* background: #303aa2; */
+      /* padding: 15px; */
+      /* border-radius: 8px; */
       margin: 10px 0;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
+       background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+   text-align: center;
+      font-size: larger;
+      width: 800px;
+  height: 350px;
+ /* display: flex; */
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: larger;
+}
+    
 
     .forecast-container {
       background-color:  (#3d3b3b, #2fff003a);
@@ -87,11 +105,18 @@ body {
     }
 
     .forecast-card {
-      background: #767fe2;
-      padding: 10px;
+      /* background: #767fe2; */
+      /* padding: 10px; */
       border-radius: 6px;
       flex: 1 1 150px;
       text-align: center;
+      font-size: larger;
+       background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
     .error {
@@ -130,7 +155,7 @@ body {
 
     function getWeather(event) {
 
-      event.preventDefault(); // Prevents page reload
+      event.preventDefault();  
 
       const hh = document.getElementsByClassName("hii");
 
